@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+   {% if category %}
+      {{category.description|truncatewords:155}}
+   {% else %}
+       Welcome to HomeShop where you can purchase your desired home appliances
+   {% endif %}
+{% endblock %}
+
+{% block title %}
+{% if category %}
+      {{category.name}} - Home Shop
+{% else %}
+       See our new collections-HomeShop
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if category %}
+
+
+<div>
+    <div class="row my_row_class">
+        <div class="mx-auto">
+    <p><a href="{% url 'shop:allProdCat' %}">Our collection of Home Appliances</a></p>
+</div>
+        </div>
+</div>
+{% endif %}
+<div class="mx_auto">
+   {% if category %}
+    <img class="my_image" src="{{category.image.url}}" alt="{{category.name}}">
+</div>
+<br>
+<div>
+    <h1 class="text-center my_title">{{category.name}}</h1>
+    <p class="text-justify">{{category.description}}</p>
+</div>
+{% else %}
+<div>
+    <img class="my_image my_image_padding" src="{% static 'img/banner.png' %}" alt="Our products">
+</div>
+<br>
+<div>
+    <h1 class="text-center my_title">Our Products collection</h1>
+   <p class="text-justify"> We at HomeShop provide you with the highest quality home appliances at competitive prices. Choose the item of your choice from well-known manufacturers like Samsung, Phillips, Whirlpool, and Usha that were created with your needs in mind. No matter what you require, you can purchase your preferred brands' products from us even if your budget is limited. It is crucial to make your choice after analysing the advantages and disadvantages of each model and taking into account your unique needs and preferences.</p>
+</div>
+
+{% endif %}
+
+<div class="container">
+    <div class="row mx_auto">
+        {% for product in products.object_list %}
+        <div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-lg-4">
+            <div class="card text-center" style="min-width: 18rem;">
+                <a href="{{product.get_url}}"><img class="card-img-top my_image" src="{{product.image.url}}" alt="{{product.name}}"></a>
+                <div class="card-body">
+                     <h4>{{product.name}}</h4>
+                    <p>₹ {{product.price}}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mx-auto">
+        {% if products.paginator.num_pages > 1 %}
+      <hr>
+        <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+            <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+            {% endfor %}
+        </div>
+          {% endif %}
+    </div>
+    <br>
+</div>
+{% endblock %}
